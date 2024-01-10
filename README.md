@@ -12,7 +12,7 @@
         ```
 
 ### Usage
-`python run.py --media_path=<url|path> --diarize --save_to_path=<filename>`
+`python run.py transcribe --media_path=<url|path> --diarize --save_to_path=<filename>`
 
 if you do not enable `save_to_path`, the audio/video/subtitles will be left as separate files in the temporary `store` folder.
 
@@ -24,6 +24,6 @@ Optional models must support FasterWhisper/WhisperX
 
 ### Example
 
-`python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
+`python run.py transcribe --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
 
 ![tom-scott](assets/tomscott.png)
