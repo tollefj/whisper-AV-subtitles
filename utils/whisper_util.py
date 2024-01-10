@@ -1,29 +1,13 @@
 import gc
 import time
-from datetime import timedelta
 
 import torch
 import whisperx
 import yaml
-from transformers import pipeline
-
-from utils.ffmpeg_util import get_audio_length
 
 secrets = yaml.load(open("secrets.yml", "r"), Loader=yaml.FullLoader)
 config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 config = config["whisper"]
-
-
-def get_subs(prediction):
-    subs = []
-    for i, pred in enumerate(prediction):
-        start, end = pred["timestamp"]
-        text = pred["text"].strip()
-        start = time.strftime("%H:%M:%S,000", time.gmtime(start))
-        end = time.strftime("%H:%M:%S,000", time.gmtime(end))
-        srt = f"{i+1}\n{start} --> {end}\n{text}\n\n"
-        subs.append(srt)
-    return subs
 
 
 def transcribe(
@@ -79,21 +63,6 @@ def transcribe(
     print(f"Detected audio with length {length_in_seconds} seconds")
     result["segments"][-1]["end"] = length_in_seconds
     return result
-
-
-def transcribe_audio(audio_path, model_id):
-    device = 0 if torch.cuda.is_available() else -1
-    pipe = pipeline(
-        "automatic-speech-recognition", model=model_id, chunk_length_s=30, device=device
-    )
-    prediction = pipe(audio_path, batch_size=8, return_timestamps=True)["chunks"]
-
-    last_timestamp = prediction[-1]["timestamp"]
-    duration = get_audio_length(audio_path)
-    if last_timestamp[-1] < duration:
-        prediction[-1]["timestamp"] = (last_timestamp[0], duration)
-
-    return prediction
 
 
 def create_segment(index, start, end, text, speaker=None):

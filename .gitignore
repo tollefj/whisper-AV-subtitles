@@ -1,4 +1,5 @@
 secrets.yml
+examples
 __pycache__
 output
 store

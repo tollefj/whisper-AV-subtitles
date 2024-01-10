@@ -4,7 +4,7 @@ import shutil
 from fire import Fire
 
 from utils.ffmpeg_util import extract_audio, write_video_with_subs
-from utils.whisper_util import get_subs, segments_to_srt, transcribe, transcribe_audio
+from utils.whisper_util import segments_to_srt, transcribe
 from utils.youtube_util import download_video
 
 ext = (".mp4", ".mkv", ".avi")
@@ -62,10 +62,6 @@ class Transcriber:
         )
         subtitles = segments_to_srt(segments=transcription["segments"])
 
-        # transcription = transcribe_audio(
-        #     audio_path=self.STORE["audio"], model_id=self.model
-        # )
-        # subtitles = get_subs(transcription)
         with open(self.STORE["srt"], "w") as f:
             f.writelines(subtitles)
 
