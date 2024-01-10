@@ -11,6 +11,7 @@ def write_video_with_subs(video_path, srt_path, output_file):
             vf=f"subtitles={srt_path}",
             ar=48000,
             max_muxing_queue_size=9999,
+            pix_fmt="yuv420p",
             maxrate="1500k",
             bufsize="2000k",
         )
