@@ -1,3 +1,5 @@
 torch
 transformers
+ffmpeg-python
 git+https://github.com/ytdl-org/youtube-dl.git@master
+git+https://github.com/m-bain/whisperx.git
