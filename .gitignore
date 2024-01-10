@@ -1,9 +1,8 @@
 __pycache__
-subtitles
-tmp
+output
+store
 *.srt
 *.mp4
 *.mkv
 *.avi
 *.mp3
-tmp

@@ -6,6 +6,6 @@ if [ "$#" -ne 1 ]; then
 fi
 
 input_path=$1
-output_path="audio_tmp.mp3"
+output_path="store/audio.mp3"
 
-ffmpeg -i $input_path -f mp3 -ab 192000 -vn $output_path
+ffmpeg -i $input_path -f mp3 -ab 192000 -vn $output_path -y
