@@ -3,7 +3,7 @@ import subprocess
 import time
 
 
-def get_subs(prediction, add_line_number=True):
+def get_subs(prediction):
     subs = []
     for i, pred in enumerate(prediction):
         start, end = pred["timestamp"]
