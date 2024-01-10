@@ -10,7 +10,7 @@ config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 config = config["whisper"]
 
 
-def transcribe(
+def whisperx_transcription(
     audio_path,
     model_id=None,
     min_speakers=None,
