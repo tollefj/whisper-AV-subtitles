@@ -6,7 +6,7 @@ update_permissions:
 	chmod +x install_ffmpeg.sh
 
 install_ffmpeg:
-	./install_ffmpeg.sh
+	./install.sh
 
 install_python_deps:
 	pip install -r requirements.txt
