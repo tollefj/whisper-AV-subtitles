@@ -6,6 +6,7 @@ def write_video_with_subs(video_path, srt_path, output_file):
         ffmpeg.input(video_path)
         .output(
             output_file,
+            vcodec="h264_nvenc",
             acodec="aac",
             vf=f"subtitles={srt_path}",
             ar=48000,

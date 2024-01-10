@@ -1,0 +1,6 @@
+whisper:
+  model: base
+  batch_size: 16
+  device: cuda
+  compute_type: float16
+
