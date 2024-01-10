@@ -12,9 +12,13 @@
         HF: <your-token>
         ```
 
-
 ### Usage
-- From a video url:
-    - python run.py url --save output_video_filename
-- From a local video:
-    - python run.py path-to-video --save output_video_filename
+`python run.py --media_path=<url|path> --diarize --save_to_path=<filename>`
+
+if you do not enable `save_to_path`, the audio/video/subtitles will be left as separate files in the temporary `store` folder.
+
+### Example
+
+`python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
+
+![tom-scott](assets/tomscott.png)
