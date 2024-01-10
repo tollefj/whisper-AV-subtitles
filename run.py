@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from fire import Fire
+import fire
 
 from utils.ffmpeg_util import extract_audio, write_video_with_subs
 from utils.whisper_util import segments_to_srt, transcribe
@@ -40,9 +40,8 @@ class Transcriber:
         }
 
         shutil.rmtree(TMP_FOLDER, ignore_errors=True)
-        self.run()
 
-    def run(self):
+    def transcribe(self):
         os.makedirs(TMP_FOLDER, exist_ok=True)
         os.makedirs(OUTPUT, exist_ok=True)
 
@@ -50,7 +49,8 @@ class Transcriber:
             download_video(self.media_path, output=self.STORE["video"])
             extract_audio(self.STORE["video"], self.STORE["audio"])
         elif self.media_path.endswith(ext):
-            extract_audio(self.media_path, self.STORE["audio"])
+            self.STORE["video"] = self.media_path
+            extract_audio(self.STORE["video"], self.STORE["audio"])
         elif self.media_path.endswith(ext_audio):
             self.STORE["audio"] = self.media_path
 
@@ -77,4 +77,4 @@ class Transcriber:
 
 
 if __name__ == "__main__":
-    Fire(Transcriber)
+    fire.Fire(Transcriber)
