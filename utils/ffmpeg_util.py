@@ -1,4 +1,14 @@
+from sys import platform
+
 import ffmpeg
+import torch
+
+# for specifics, see: https://trac.ffmpeg.org/wiki/HWAccelIntro#VideoToolbox
+video_codec = "libx264"
+if torch.cuda.is_available():
+    video_codec = "h264_nvenc"
+elif platform == "darwin":
+    video_codec = "h264_videotoolbox"
 
 
 def write_video_with_subs(video_path, srt_path, output_file):
@@ -6,7 +16,7 @@ def write_video_with_subs(video_path, srt_path, output_file):
         ffmpeg.input(video_path)
         .output(
             output_file,
-            vcodec="h264_nvenc",
+            vcodec=video_codec,
             acodec="aac",
             vf=f"subtitles={srt_path}",
             ar=48000,

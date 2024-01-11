@@ -1,4 +1,6 @@
 import gc
+import json
+import os
 import time
 
 import torch
@@ -10,6 +12,11 @@ config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 config = config["whisper"]
 
 
+def write_results(results):
+    with open("store/tmp_result.json", "w") as f:
+        json.dump(results, f, indent=4)
+
+
 def whisperx_transcription(
     audio_path,
     model_id=None,
@@ -18,8 +25,15 @@ def whisperx_transcription(
     align=False,
     diarize=False,
 ):
+    if os.path.exists("store/tmp_result.json"):
+        with open("store/tmp_result.json", "r") as f:
+            return json.load(f)
+
+    cuda_enabled = torch.cuda.is_available()
+    device = "cpu"
+    if cuda_enabled:
+        device = "cuda"
     model_id = model_id if model_id else config["model"]
-    device = config["device"]
     model = whisperx.load_model(
         model_id, device=device, compute_type=config["compute_type"]
     )
@@ -27,8 +41,10 @@ def whisperx_transcription(
     print("1. Transcribing...")
     audio = whisperx.load_audio(audio_path)
     result = model.transcribe(audio, batch_size=config["batch_size"])
-    gc.collect()
-    torch.cuda.empty_cache()
+    write_results(result)
+    if cuda_enabled:
+        gc.collect()
+        torch.cuda.empty_cache()
     del model
 
     if align:
@@ -44,8 +60,10 @@ def whisperx_transcription(
             device,
             return_char_alignments=False,
         )
-        gc.collect()
-        torch.cuda.empty_cache()
+        write_results(result)
+        if cuda_enabled:
+            gc.collect()
+            torch.cuda.empty_cache()
         del alignment
 
     if diarize:
@@ -58,6 +76,7 @@ def whisperx_transcription(
         )
         diarize_segments = diarize_model(audio)
         result = whisperx.assign_word_speakers(diarize_segments, result)
+        write_results(result)
 
     length_in_seconds = len(audio) / whisperx.audio.SAMPLE_RATE
     print(f"Detected audio with length {length_in_seconds} seconds")

@@ -1,6 +1,6 @@
-torch
-transformers
+git+https://github.com/m-bain/whisperx.git
+git+https://github.com/ytdl-org/youtube-dl.git@master
+# torch
+# transformers
 ffmpeg-python
 fire
-git+https://github.com/ytdl-org/youtube-dl.git@master
-git+https://github.com/m-bain/whisperx.git

@@ -29,11 +29,13 @@ def transcribe(
     align: bool = True,
     diarize: bool = False,
     save_to_path: str = None,  # saves a subtitled video to the specified path
+    delete_files: bool = False,  # deletes the tmp folder (store)
     skip_download: bool = False,
 ) -> None:
-    shutil.rmtree(TMP_FOLDER, ignore_errors=True)
-    os.makedirs(TMP_FOLDER, exist_ok=True)
-    os.makedirs(OUTPUT, exist_ok=True)
+    if delete_files:
+        shutil.rmtree(TMP_FOLDER, ignore_errors=True)
+        os.makedirs(TMP_FOLDER, exist_ok=True)
+        os.makedirs(OUTPUT, exist_ok=True)
 
     if media_path.startswith("http") and not skip_download:
         download_video(media_path, output=STORE["video"])
@@ -61,7 +63,8 @@ def transcribe(
         )
         output_file = os.path.join(OUTPUT, output_file)
         write_video_with_subs(STORE["video"], STORE["srt"], output_file)
-        shutil.rmtree(TMP_FOLDER, ignore_errors=True)
+        if delete_files:
+            shutil.rmtree(TMP_FOLDER, ignore_errors=True)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,13 @@
 # Inline video subtitles with Whisper
 
 ### Setup and installation
+
+- Find the proper PyTorch 2.0 installation for your system:
+    - https://pytorch.org/get-started/previous-versions/#v200
 - run `make`
-- To support speaker diarization, you need to save your huggingface token in `secrets.yml` in the root dir:
+
+To support speaker diarization, you need to save your huggingface token in `secrets.yml` in the root dir:
+
     1. Create a huggingface account
     2. Accept the terms at https://huggingface.co/pyannote/speaker-diarization-3.1
     3. Create a token from https://huggingface.co/settings/tokens

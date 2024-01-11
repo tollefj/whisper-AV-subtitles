@@ -1,5 +1,6 @@
 secrets.yml
 examples
+.DS_Store
 __pycache__
 output
 store
