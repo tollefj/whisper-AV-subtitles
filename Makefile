@@ -3,7 +3,7 @@
 all: update_permissions install_ffmpeg install_python_deps
 
 update_permissions:
-	chmod +x install_ffmpeg.sh
+	chmod +x install.sh
 
 install_ffmpeg:
 	./install.sh
