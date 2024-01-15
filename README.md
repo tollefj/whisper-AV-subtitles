@@ -1,4 +1,6 @@
 # Inline video subtitles with Whisper
+![tom-scott](assets/tomscott.png)
+`python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
 
 ## Setup and installation
 
@@ -31,8 +33,3 @@ Optional models must support FasterWhisper/WhisperX
   - Example model:
   - Norwegian Bokmål: `NbAiLabBeta/nb-whisper-small`
 
-## Example
-
-`python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
-
-![tom-scott](assets/tomscott.png)
