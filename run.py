@@ -12,7 +12,7 @@ ext_audio = (".mp3", ".wav", ".ogg")
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TMP_FOLDER = os.path.join(BASE_DIR, "store")
+TMP_FOLDER = os.path.join(BASE_DIR, "store", "tmp")
 OUTPUT = os.path.join(BASE_DIR, "output")
 
 
@@ -28,6 +28,7 @@ DEFAULT_MODEL = "NbAiLabBeta/nb-whisper-small"
 
 def transcribe(
     media_path: str,
+    name: str,
     model: str = DEFAULT_MODEL,
     align: bool = True,
     diarize: bool = False,
@@ -59,6 +60,9 @@ def transcribe(
 
     with open(STORE["srt"], "w") as f:
         f.writelines(subtitles)
+
+    if name:
+        os.rename(TMP_FOLDER, os.path.join(BASE_DIR, "store", name))
 
     if save_to_path:
         output_file = (
