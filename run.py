@@ -37,7 +37,7 @@ def transcribe(
         os.makedirs(TMP_FOLDER, exist_ok=True)
         os.makedirs(OUTPUT, exist_ok=True)
 
-    if media_path.startswith("http") and not skip_download:
+    if "http" in media_path and not skip_download:
         download_video(media_path, output=STORE["video"])
         extract_audio(STORE["video"], STORE["audio"])
     elif media_path.endswith(ext):

@@ -4,3 +4,4 @@ git+https://github.com/ytdl-org/youtube-dl.git@master
 # transformers
 ffmpeg-python
 fire
+srt
