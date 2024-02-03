@@ -22,10 +22,13 @@ STORE = {
     "srt": os.path.join(TMP_FOLDER, "subtitles.srt"),
 }
 
+# DEFAULT_MODEL = "base"
+DEFAULT_MODEL = "NbAiLabBeta/nb-whisper-small"
+
 
 def transcribe(
     media_path: str,
-    model: str = "base",
+    model: str = DEFAULT_MODEL,
     align: bool = True,
     diarize: bool = False,
     save_to_path: str = None,  # saves a subtitled video to the specified path
