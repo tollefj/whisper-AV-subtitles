@@ -7,7 +7,6 @@ import torch
 import whisperx
 import yaml
 
-secrets = yaml.load(open("secrets.yml", "r"), Loader=yaml.FullLoader)
 config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 config = config["whisper"]
 
@@ -68,6 +67,7 @@ def whisperx_transcription(
 
     if diarize:
         print("3. Diarizing...")
+        secrets = yaml.load(open("secrets.yml", "r"), Loader=yaml.FullLoader)
         diarize_model = whisperx.DiarizationPipeline(
             use_auth_token=secrets["HF"], device=device
         )
