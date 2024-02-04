@@ -68,6 +68,15 @@ def transcribe(
         if delete_files:
             shutil.rmtree(tmp_folder, ignore_errors=True)
 
+    logging.info(f"Transcription complete. See the output files in {tmp_folder}")
+    # open the folder in the OS:
+    if sys.platform == "darwin":
+        os.system(f"open {tmp_folder}")
+    elif sys.platform == "win32":
+        os.system(f"start {tmp_folder}")
+    elif sys.platform == "linux":
+        os.system(f"xdg-open {tmp_folder}")
+
     return STORE
 
 
