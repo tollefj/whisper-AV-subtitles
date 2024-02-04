@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 
+from translate_srt import translate
 from utils.ffmpeg_util import extract_audio, write_video_with_subs
 from utils.whisper_util import segments_to_srt, whisperx_transcription
 from utils.youtube_util import download_audio
@@ -14,10 +15,12 @@ OUTPUT = os.path.join(BASE_DIR, "output")
 ext = (".mp4", ".mkv", ".avi")
 
 
+logging.basicConfig(level=logging.INFO)
+
+
 def transcribe(
     media_path: str,
     model: str = "NbAiLabBeta/nb-whisper-small",
-    align: bool = True,
     diarize: bool = False,
     save_to_path: str = None,  # saves a subtitled video to the specified path
     delete_files: bool = True,  # deletes the tmp folder (store)
@@ -48,9 +51,8 @@ def transcribe(
 
     logger.info("Transcribing audio...")
     transcription = whisperx_transcription(
-        audio_path=STORE["audio"],
+        store=STORE,
         model_id=model,
-        align=align,
         diarize=diarize,
     )
     subtitles = segments_to_srt(segments=transcription["segments"])
@@ -68,22 +70,19 @@ def transcribe(
         if delete_files:
             shutil.rmtree(tmp_folder, ignore_errors=True)
 
-    logging.info(f"Transcription complete. See the output files in {tmp_folder}")
-    # open the folder in the OS:
-    if sys.platform == "darwin":
-        os.system(f"open {tmp_folder}")
-    elif sys.platform == "win32":
-        os.system(f"start {tmp_folder}")
-    elif sys.platform == "linux":
-        os.system(f"xdg-open {tmp_folder}")
-
     return STORE
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    print(f"Recieved args: {sys.argv}")
+    store = None
     if sys.argv[1]:
-        transcribe(sys.argv[1])
+        store = transcribe(sys.argv[1])
+        print(f"Transcription complete. See the output files in {store}")
     else:
         print("No media path provided")
         sys.exit(1)
+
+    if len(sys.argv) > 2:
+        lang = sys.argv[2]
+        translate(store["srt"], lang)

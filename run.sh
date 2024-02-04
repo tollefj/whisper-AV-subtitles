@@ -6,4 +6,4 @@ if [ -z "$1" ]
     echo "No media path or url supplied"
     exit 1
 fi
-python transcription.py "$1"
+python transcription.py "$@"
