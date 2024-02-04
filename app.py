@@ -1,3 +1,5 @@
+import logging
+
 import PySimpleGUI as sg
 
 from transcription import transcribe
@@ -62,12 +64,14 @@ def transcribe_and_update_ui(
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     window = sg.Window("Transcriber", layout)
     event, values = window.read()
     window["-STATUS-"].update("Select a file or URL to transcribe.")
     _thread = ReturnValueThread(
         target=transcribe_and_update_ui, args=(window, values[0], values[1])
     )
+    srt_path = None
 
     while True:
         # event, values = window.read(timeout=500)

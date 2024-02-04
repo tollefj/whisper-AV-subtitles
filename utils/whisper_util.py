@@ -17,6 +17,9 @@ def write_results(results):
         json.dump(results, f, indent=4)
 
 
+alignment_models = {"no": "NbAiLab/nb-wav2vec2-300m-bokmaal-v2"}
+
+
 def whisperx_transcription(
     audio_path,
     model_id=None,
@@ -50,8 +53,10 @@ def whisperx_transcription(
 
     if align:
         logger.info("2. Aligning...")
+        alignment_model = alignment_models.get("no", None)
+
         alignment, metadata = whisperx.load_align_model(
-            language_code=result["language"], device=device
+            language_code=result["language"], device=device, model_name=alignment_model
         )
         result = whisperx.align(
             result["segments"],
