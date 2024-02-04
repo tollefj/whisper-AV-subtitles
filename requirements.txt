@@ -3,5 +3,6 @@ git+https://github.com/ytdl-org/youtube-dl.git@master
 # torch
 # transformers
 ffmpeg-python
-fire
+# fire
 srt
+sacremoses
