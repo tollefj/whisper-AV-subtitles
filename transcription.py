@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 import shutil
@@ -25,6 +26,7 @@ def transcribe(
     save_to_path: str = None,  # saves a subtitled video to the specified path
     delete_files: bool = True,  # deletes the tmp folder (store)
     skip_download: bool = False,
+    language="no",
 ) -> None:
     logger = logging.getLogger(__name__)
 
@@ -54,6 +56,7 @@ def transcribe(
         store=STORE,
         model_id=model,
         diarize=diarize,
+        language=language,
     )
     subtitles = segments_to_srt(segments=transcription["segments"])
 
@@ -74,15 +77,10 @@ def transcribe(
 
 
 if __name__ == "__main__":
-    print(f"Recieved args: {sys.argv}")
-    store = None
-    if sys.argv[1]:
-        store = transcribe(sys.argv[1])
-        print(f"Transcription complete. See the output files in {store}")
-    else:
-        print("No media path provided")
-        sys.exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("media_path", help="Path to the media file")
+    parser.add_argument("language", help="Language for translation", default="no")
+    args = parser.parse_args()
 
-    if len(sys.argv) > 2:
-        lang = sys.argv[2]
-        translate(store["srt"], lang)
+    store = transcribe(args.media_path, language=args.language)
+    print(f"Transcription complete. See the output files in {store}")

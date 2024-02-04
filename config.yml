@@ -2,4 +2,5 @@ whisper:
   model: base
   batch_size: 8
   compute_type: int8
+  language: no
 

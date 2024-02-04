@@ -12,15 +12,13 @@ config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 config = config["whisper"]
 
 
-alignment_models = {"no": "NbAiLab/nb-wav2vec2-300m-bokmaal-v2"}
-
-
 def whisperx_transcription(
     store,
     model_id=None,
     min_speakers=None,
     max_speakers=None,
     diarize=False,
+    language="no",
 ):
     print(locals())
     cuda_enabled = torch.cuda.is_available()
@@ -29,7 +27,10 @@ def whisperx_transcription(
         device = "cuda"
     model_id = model_id if model_id else config["model"]
     model = whisperx.load_model(
-        model_id, device=device, compute_type=config["compute_type"]
+        model_id,
+        device=device,
+        compute_type=config["compute_type"],
+        language=language,
     )
 
     print("1. Transcribing...")
