@@ -1,5 +1,6 @@
 import gc
 import json
+import logging
 import os
 import time
 
@@ -16,6 +17,9 @@ def write_results(results):
         json.dump(results, f, indent=4)
 
 
+alignment_models = {"no": "NbAiLab/nb-wav2vec2-300m-bokmaal-v2"}
+
+
 def whisperx_transcription(
     audio_path,
     model_id=None,
@@ -24,6 +28,7 @@ def whisperx_transcription(
     align=False,
     diarize=False,
 ):
+    logger = logging.getLogger(__name__)
     if os.path.exists("store/tmp_result.json"):
         with open("store/tmp_result.json", "r") as f:
             return json.load(f)
@@ -37,7 +42,7 @@ def whisperx_transcription(
         model_id, device=device, compute_type=config["compute_type"]
     )
 
-    print("1. Transcribing...")
+    logger.info("1. Transcribing...")
     audio = whisperx.load_audio(audio_path)
     result = model.transcribe(audio, batch_size=config["batch_size"])
     write_results(result)
@@ -47,9 +52,11 @@ def whisperx_transcription(
     del model
 
     if align:
-        print("2. Aligning...")
+        logger.info("2. Aligning...")
+        alignment_model = alignment_models.get("no", None)
+
         alignment, metadata = whisperx.load_align_model(
-            language_code=result["language"], device=device
+            language_code=result["language"], device=device, model_name=alignment_model
         )
         result = whisperx.align(
             result["segments"],
@@ -66,7 +73,7 @@ def whisperx_transcription(
         del alignment
 
     if diarize:
-        print("3. Diarizing...")
+        logger.info("3. Diarizing...")
         secrets = yaml.load(open("secrets.yml", "r"), Loader=yaml.FullLoader)
         diarize_model = whisperx.DiarizationPipeline(
             use_auth_token=secrets["HF"], device=device
@@ -79,7 +86,7 @@ def whisperx_transcription(
         write_results(result)
 
     length_in_seconds = len(audio) / whisperx.audio.SAMPLE_RATE
-    print(f"Detected audio with length {length_in_seconds} seconds")
+    logger.info(f"Detected audio with length {length_in_seconds} seconds")
     result["segments"][-1]["end"] = length_in_seconds
     return result
 
