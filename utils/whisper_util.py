@@ -27,8 +27,6 @@ def whisperx_transcription(
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
-    logger.info(f"Using whisperx version {whisperx.__version__}")
-
     logger.info(locals())
     cuda_enabled = cuda.is_available()
     device = "cuda" if cuda_enabled else "cpu"

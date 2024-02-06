@@ -1,5 +1,34 @@
 # Inline video subtitles with Whisper
 ![tom-scott](assets/tomscott.png)
+
+## Usage
+
+`python transcription.py [-h] [--model MODEL] [--diarize] [--save_to_path SAVE_TO_PATH] media_path language`
+
+Alternatively, `./run.sh` is mapped to `python transcription.py`.
+
+### Arguments
+
+```console
+positional arguments:
+  media_path            Path to the media file
+  language              Language for translation
+
+options:
+  -h, --help            show this help message and exit
+  --model MODEL         Model for transcription
+  --diarize             Whether to diarize the audio
+  --save                Whether to render a video + subtitles
+```
+
+## Example
+
+- English:
+  - `./run.sh https://www.youtube.com/watch\?v\=Zl_5LT2fzak en --model=base --diarize --save`
+- Norwegian:
+  - `./run.sh https://tv.nrk.no/serie/munter-mat/2023/KOID33006222/avspiller no --model=NbAiLabBeta/nb-whisper-small`
+
+
 `python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
 
 ## Setup and installation
@@ -18,12 +47,6 @@ To support speaker diarization, you need to save your huggingface token in `secr
     ```yaml
     HF: <your-token>
     ```
-
-## Usage
-
-`python run.py --media_path=<url|path> --diarize --save_to_path=<filename>`
-
-if you do not enable `save_to_path`, the audio/video/subtitles will be left as separate files in the temporary `store` folder.
 
 ## With other languages/models
 

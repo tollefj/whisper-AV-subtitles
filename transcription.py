@@ -22,7 +22,7 @@ def transcribe(
     media_path: str,
     model: str = "NbAiLabBeta/nb-whisper-small",
     diarize: bool = False,
-    save_to_path: str = None,  # saves a subtitled video to the specified path
+    save: bool = False,  # saves the subtitled video in the output folder
     language="no",
 ) -> None:
     config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
@@ -38,7 +38,7 @@ def transcribe(
 
     if any(url_like in media_path for url_like in ["http", "www"]):
         logging.info("Downloading media...")
-        if save_to_path:
+        if save:
             download_video(media_path, output=STORE["video"])
             extract_audio(STORE["video"], STORE["audio"])
         else:
@@ -64,13 +64,11 @@ def transcribe(
     with open(STORE["srt"], "w") as f:
         f.writelines(subtitles)
 
-    if save_to_path:
-        output_file = (
-            save_to_path if save_to_path.endswith(ext) else f"{save_to_path}.mp4"
-        )
-        output_file = os.path.join(OUTPUT, output_file)
-        os.makedirs(OUTPUT, exist_ok=True)
+    if save:
+        output_file = f"{name}_subtitled.mp4"
+        output_file = os.path.join(tmp_folder, output_file)
         write_video_with_subs(STORE["video"], STORE["srt"], output_file)
+        logging.info(f"Subtitled video saved to {output_file}")
 
     return STORE
 
@@ -87,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--diarize", help="Whether to diarize the audio", action="store_true"
     )
-    parser.add_argument("--save_to_path", help="Path to save the subtitled video")
+    parser.add_argument("--save", help="Save the subtitled video", action="store_true")
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -101,7 +99,7 @@ if __name__ == "__main__":
         args.media_path,
         model=args.model,
         diarize=args.diarize,
-        save_to_path=args.save_to_path,
+        save=args.save,
         language=args.language,
     )
     logging.info(f"Transcription complete. See the output files in {store}")
