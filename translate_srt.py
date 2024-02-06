@@ -39,5 +39,6 @@ def translate(path, language="english"):
 
 
 if __name__ == "__main__":
+    # just a test.
     tmp_path = "store/watch?v=nyxcO2vdcCg/subtitles.srt"
     translate(tmp_path, "english")

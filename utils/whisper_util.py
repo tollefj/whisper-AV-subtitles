@@ -1,30 +1,27 @@
 import gc
-import json
-import os
 import time
+import warnings
+from typing import Dict
 
-import torch
+from torch import cuda
+
+# avoid PyAnnote warnings for torchaudio backend.
+warnings.filterwarnings("ignore", category=UserWarning)
 import whisperx
-import yaml
-from transformers import AutoModelForCTC, AutoProcessor
-
-config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
-config = config["whisper"]
 
 
 def whisperx_transcription(
     store,
+    config: Dict[str, str],
+    diarize_config: Dict[str, str] = None,
     model_id=None,
     min_speakers=None,
     max_speakers=None,
-    diarize=False,
     language="no",
 ):
     print(locals())
-    cuda_enabled = torch.cuda.is_available()
-    device = "cpu"
-    if cuda_enabled:
-        device = "cuda"
+    cuda_enabled = cuda.is_available()
+    device = "cuda" if cuda_enabled else "cpu"
     model_id = model_id if model_id else config["model"]
     model = whisperx.load_model(
         model_id,
@@ -38,7 +35,7 @@ def whisperx_transcription(
     result = model.transcribe(audio, batch_size=config["batch_size"])
     if cuda_enabled:
         gc.collect()
-        torch.cuda.empty_cache()
+        cuda.empty_cache()
     del model
 
     print("2. Aligning...")
@@ -57,19 +54,17 @@ def whisperx_transcription(
 
     if cuda_enabled:
         gc.collect()
-        torch.cuda.empty_cache()
+        cuda.empty_cache()
     del alignment
 
-    if diarize:
+    if diarize_config:
         print("3. Diarizing...")
-        secrets = yaml.load(open("secrets.yml", "r"), Loader=yaml.FullLoader)
         diarize_model = whisperx.DiarizationPipeline(
-            use_auth_token=secrets["HF"], device=device
+            use_auth_token=diarize_config["HF"], device=device
         )
         diarize_segments = diarize_model(
             audio, min_speakers=min_speakers, max_speakers=max_speakers
         )
-        diarize_segments = diarize_model(audio)
         result = whisperx.assign_word_speakers(diarize_segments, result)
 
     length_in_seconds = len(audio) / whisperx.audio.SAMPLE_RATE
