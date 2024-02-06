@@ -25,7 +25,6 @@ def transcribe(
     save_to_path: str = None,  # saves a subtitled video to the specified path
     language="no",
 ) -> None:
-    logger = logging.getLogger(__name__)
     config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 
     name = media_path.split("/")[-1].split(".")[0]
@@ -38,18 +37,18 @@ def transcribe(
     }
 
     if any(url_like in media_path for url_like in ["http", "www"]):
-        logger.info("Downloading media...")
+        logging.info("Downloading media...")
         if save_to_path:
             download_video(media_path, output=STORE["video"])
             extract_audio(STORE["video"], STORE["audio"])
         else:
             download_audio(media_path, output=STORE["audio"])
     else:
-        logger.info("Extracting audio...")
+        logging.info("Extracting audio...")
         STORE["video"] = media_path
         extract_audio(STORE["video"], STORE["audio"])
 
-    logger.info("Transcribing audio...")
+    logging.info("Transcribing audio...")
     diarize_config = None
     if diarize:
         diarize_config = yaml.load(open("secrets.yml"), Loader=yaml.FullLoader)
@@ -90,7 +89,13 @@ if __name__ == "__main__":
     )
     parser.add_argument("--save_to_path", help="Path to save the subtitled video")
     args = parser.parse_args()
-    print(f"Recieved args: {args}")
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(message)s",
+        datefmt="%d-%b-%y %H:%M:%S",
+    )
+    logging.info(f"Recieved args: {args}")
 
     store = transcribe(
         args.media_path,
@@ -99,4 +104,4 @@ if __name__ == "__main__":
         save_to_path=args.save_to_path,
         language=args.language,
     )
-    print(f"Transcription complete. See the output files in {store}")
+    logging.info(f"Transcription complete. See the output files in {store}")

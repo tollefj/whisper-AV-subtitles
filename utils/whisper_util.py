@@ -1,4 +1,5 @@
 import gc
+import logging
 import time
 import warnings
 from typing import Dict
@@ -19,7 +20,16 @@ def whisperx_transcription(
     max_speakers=None,
     language="no",
 ):
-    print(locals())
+    logger = logging.getLogger(__name__)
+    if not logging.root.handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+    logger.info(f"Using whisperx version {whisperx.__version__}")
+
+    logger.info(locals())
     cuda_enabled = cuda.is_available()
     device = "cuda" if cuda_enabled else "cpu"
     model_id = model_id if model_id else config["model"]
@@ -30,7 +40,7 @@ def whisperx_transcription(
         language=language,
     )
 
-    print("1. Transcribing...")
+    logger.info("1. Transcribing...")
     audio = whisperx.load_audio(store["audio"])
     result = model.transcribe(audio, batch_size=config["batch_size"])
     if cuda_enabled:
@@ -38,7 +48,7 @@ def whisperx_transcription(
         cuda.empty_cache()
     del model
 
-    print("2. Aligning...")
+    logger.info("2. Aligning...")
 
     alignment, metadata = whisperx.load_align_model(
         language_code=result["language"], device=device
@@ -58,7 +68,7 @@ def whisperx_transcription(
     del alignment
 
     if diarize_config:
-        print("3. Diarizing...")
+        logger.info("3. Diarizing...")
         diarize_model = whisperx.DiarizationPipeline(
             use_auth_token=diarize_config["HF"], device=device
         )
@@ -68,7 +78,7 @@ def whisperx_transcription(
         result = whisperx.assign_word_speakers(diarize_segments, result)
 
     length_in_seconds = len(audio) / whisperx.audio.SAMPLE_RATE
-    print(f"Detected audio with length {length_in_seconds} seconds")
+    logger.info(f"Detected audio with length {length_in_seconds} seconds")
     result["segments"][-1]["end"] = length_in_seconds
     return result
 
