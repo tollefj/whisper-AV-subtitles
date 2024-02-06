@@ -1,4 +1,4 @@
-# Inline video subtitles with Whisper
+# Super-simple subtitles with WhisperX
 ![tom-scott](assets/tomscott.png)
 
 ## Usage
@@ -34,6 +34,8 @@ options:
   - <https://pytorch.org/get-started/previous-versions/#v200>
 - run `make`
 
+## Diarization
+
 To support speaker diarization, you need to save your huggingface token in `secrets.yml` in the root dir:
 
 1. Create a huggingface account
@@ -44,12 +46,3 @@ To support speaker diarization, you need to save your huggingface token in `secr
     ```yaml
     HF: <your-token>
     ```
-
-## With other languages/models
-
-Optional models must support FasterWhisper/WhisperX
-
-- `--model=<model-name>`
-  - Example model:
-  - Norwegian Bokmål: `NbAiLabBeta/nb-whisper-small`
-
