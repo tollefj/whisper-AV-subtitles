@@ -23,13 +23,10 @@ options:
 
 ## Example
 
-- English:
+- English (with diarization and re-rendering with subtitles):
   - `./run.sh https://www.youtube.com/watch\?v\=Zl_5LT2fzak en --model=base --diarize --save`
-- Norwegian:
+- Norwegian (no diarization or re-rendering):
   - `./run.sh https://tv.nrk.no/serie/munter-mat/2023/KOID33006222/avspiller no --model=NbAiLabBeta/nb-whisper-small`
-
-
-`python run.py --media_path=https://www.youtube.com/watch?v=Zl_5LT2fzak --diarize --save_to_path=tomscott`
 
 ## Setup and installation
 
