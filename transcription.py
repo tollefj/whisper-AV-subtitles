@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 
 def transcribe(
     media_path: str,
-    model: str = "NbAiLabBeta/nb-whisper-small",
+    model: str = "NbAiLab/nb-whisper-small",
     diarize: bool = False,
     save: bool = False,  # saves the subtitled video in the output folder
     language="no",
