@@ -80,7 +80,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model",
         help="Model for transcription",
-        default="NbAiLabBeta/nb-whisper-small",
+        default="NbAiLab/nb-whisper-small",
     )
     parser.add_argument(
         "--diarize", help="Whether to diarize the audio", action="store_true"
