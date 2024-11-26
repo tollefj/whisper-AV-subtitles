@@ -23,7 +23,7 @@ def transcribe(
     model: str = "NbAiLab/nb-whisper-small",
     diarize: bool = False,
     save: bool = False,  # saves the subtitled video in the output folder
-    language="no",
+    language: str = "no",
 ) -> None:
     config = yaml.load(open("config.yml"), Loader=yaml.FullLoader)
 
@@ -76,16 +76,25 @@ def transcribe(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("media_path", help="Path to the media file")
-    parser.add_argument("language", help="Language for translation", default="no")
     parser.add_argument(
+        "-l",
+        "--language",
+        help="Language for translation",
+        default="no",
+        required=False,
+    )
+    parser.add_argument(
+        "-m",
         "--model",
         help="Model for transcription",
         default="NbAiLab/nb-whisper-small",
     )
     parser.add_argument(
-        "--diarize", help="Whether to diarize the audio", action="store_true"
+        "-d", "--diarize", help="Whether to diarize the audio", action="store_true"
     )
-    parser.add_argument("--save", help="Save the subtitled video", action="store_true")
+    parser.add_argument(
+        "-s", "--save", help="Save the subtitled video", action="store_true"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(
